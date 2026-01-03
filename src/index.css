@@ -1,68 +1,115 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@layer base {
+  body {
+    @apply bg-gray-900 text-gray-100 antialiased;
   }
-  a:hover {
-    color: #747bff;
+  
+  @media (prefers-color-scheme: light) {
+    body {
+      @apply bg-gray-50 text-gray-900;
+    }
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .card {
+    @apply bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700;
+  }
+  
+  @media (prefers-color-scheme: light) {
+    .card {
+      @apply bg-white border-gray-200;
+    }
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900;
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 bg-gray-700 text-gray-100 hover:bg-gray-600 focus:ring-gray-500;
+  }
+  
+  .btn-danger {
+    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+  }
+  
+  @media (prefers-color-scheme: light) {
+    .btn {
+      @apply focus:ring-offset-gray-50;
+    }
+    .btn-secondary {
+      @apply bg-gray-200 text-gray-900 hover:bg-gray-300;
+    }
+  }
+  
+  /* Input styles */
+  .input {
+    @apply w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+  
+  @media (prefers-color-scheme: light) {
+    .input {
+      @apply bg-white border-gray-300 text-gray-900 placeholder-gray-500;
+    }
+  }
+  
+  /* Grid utilities */
+  .grid-auto-fit {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .grid-auto-fill {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  /* Chat specific components */
+  .chat-message {
+    @apply p-3 rounded-lg mb-2 break-words;
+  }
+  
+  .chat-message-user {
+    @apply p-3 rounded-lg mb-2 break-words bg-blue-600 text-white ml-auto max-w-[70%];
+  }
+  
+  .chat-message-other {
+    @apply p-3 rounded-lg mb-2 break-words bg-gray-700 text-gray-100 mr-auto max-w-[70%];
+  }
+  
+  .chat-message-system {
+    @apply p-3 rounded-lg mb-2 break-words bg-gray-600 text-gray-300 text-center text-sm italic mx-auto;
+  }
+  
+  @media (prefers-color-scheme: light) {
+    .chat-message-other {
+      @apply bg-gray-200 text-gray-900;
+    }
+    .chat-message-system {
+      @apply bg-gray-100 text-gray-600;
+    }
+  }
+
+  /* Animation delays for typing indicator */
+  .animation-delay-0 {
+    animation-delay: 0ms;
+  }
+  
+  .animation-delay-150 {
+    animation-delay: 150ms;
+  }
+  
+  .animation-delay-300 {
+    animation-delay: 300ms;
   }
 }

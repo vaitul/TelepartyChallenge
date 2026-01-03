@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# Teleparty Chat Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A real-time chat application built with React, TypeScript, and the Teleparty WebSocket library.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- ✅ Create and join chat rooms
+- ✅ Real-time messaging
+- ✅ Set custom nickname and emoji icon
+- ✅ View message history when joining
+- ✅ Typing indicators
+- ✅ System messages for room events
+- ✅ Dark theme UI with Tailwind CSS
+- ✅ Responsive design
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React** 19.2.0
+- **TypeScript** 5.9.3
+- **Vite** 7.2.4
+- **Tailwind CSS** 4.1.18
+- **teleparty-websocket-lib** (WebSocket client)
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+\`\`\`bash
+npm install
+\`\`\`
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Development
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+\`\`\`bash
+npm run dev
+\`\`\`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Open [http://localhost:5173](http://localhost:5173) to view the app.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Build
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+\`\`\`bash
+npm run build
+\`\`\`
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Project Structure
+
+\`\`\`
+src/
+├── components/          # React components
+│   ├── ChatRoom.tsx    # Main chat interface
+│   ├── ConnectionStatus.tsx  # Connection indicator
+│   ├── MessageInput.tsx     # Message input with typing
+│   ├── MessageList.tsx      # Message display
+│   ├── RoomSetup.tsx        # Create/join room interface
+│   └── TypingIndicator.tsx  # Typing indicator
+├── contexts/            # React Context
+│   └── TelepartyContext.tsx # WebSocket state management
+├── hooks/               # Custom hooks
+│   └── useTelepartyContext.ts
+├── types/               # TypeScript types
+│   └── teleparty.types.ts
+├── App.tsx             # Main app component
+└── index.css           # Tailwind styles
+\`\`\`
+
+## Usage
+
+1. **Enter your nickname** and optionally choose an emoji icon
+2. **Create a new room** or **join an existing room** with a Room ID
+3. **Start chatting!** Messages sync in real-time across all participants
+4. See **typing indicators** when someone is composing a message
+5. **System messages** notify when users join or leave
+
+## Key Components
+
+### TelepartyContext
+Manages WebSocket connection, room state, and message handling.
+
+### RoomSetup
+Initial screen for creating or joining a room with nickname and icon selection.
+
+### ChatRoom
+Main chat interface displaying messages, typing indicators, and input.
+
+### MessageList
+Displays chat history with proper styling for system messages, own messages, and others' messages.
+
+### MessageInput
+Text input with automatic typing presence and message sending.
+
+## License
+
+MIT
