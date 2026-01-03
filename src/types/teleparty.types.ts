@@ -12,7 +12,14 @@ export { SocketMessageTypes } from "teleparty-websocket-lib";
 import type { SessionChatMessage } from "teleparty-websocket-lib";
 
 // Custom types for the application
-export type ConnectionState = "disconnected" | "connecting" | "connected";
+export const ConnectionState = {
+  DISCONNECTED: "disconnected",
+  CONNECTING: "connecting",
+  CONNECTED: "connected",
+} as const;
+
+export type ConnectionState =
+  (typeof ConnectionState)[keyof typeof ConnectionState];
 
 export interface ChatMessage extends SessionChatMessage {
   id: string; // Unique ID for React keys

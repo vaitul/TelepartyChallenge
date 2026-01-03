@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { TelepartyClient, SocketMessageTypes } from "teleparty-websocket-lib";
 import type {
-  ConnectionState,
+  ConnectionState as ConnectionStateType,
   ChatMessage,
   SessionChatMessage,
   TypingMessageData,
@@ -15,17 +15,17 @@ import type {
   SetTypingMessageData,
   MessageList,
 } from "../types/teleparty.types";
+import { ConnectionState } from "../types/teleparty.types";
 import type { SocketMessage } from "teleparty-websocket-lib/lib/SocketMessage";
 import { createUniqueNickname } from "../utils/nickname";
 
 export interface TelepartyContextType {
-  connectionState: ConnectionState;
+  connectionState: ConnectionStateType;
   roomId: string | null;
   nickname: string | null;
   userIcon: string | null;
   messages: SessionChatMessage[];
   isAnyoneTyping: boolean;
-  reconnectAttempts: number;
 
   // Actions
   createRoom: (nickname: string, icon?: string) => Promise<string>;
@@ -45,16 +45,13 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const clientRef = useRef<TelepartyClient | null>(null);
   const [connectionState, setConnectionState] =
-    useState<ConnectionState>("connecting");
+    useState<ConnectionStateType>(ConnectionState.CONNECTING);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string | null>(null);
   const [userIcon, setUserIcon] = useState<string | null>(null);
   const [messages, setMessages] = useState<SessionChatMessage[]>([]);
   const [isAnyoneTyping, setIsAnyoneTyping] = useState(false);
-  const [reconnectAttempts, setReconnectAttempts] = useState(0);
   const currentUserId = useRef<string | undefined>(undefined);
-  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const maxReconnectAttempts = 3;
   const savedRoomDataRef = useRef<{
     nickname: string;
     roomId: string;
@@ -122,17 +119,11 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
     const eventHandler: SocketEventHandler = {
       onConnectionReady: () => {
         console.log("Connection ready");
-        setConnectionState("connected");
-        setReconnectAttempts(0);
+        setConnectionState(ConnectionState.CONNECTED);
       },
-      onClose: () => {
-        console.log("Connection closed");
-        setConnectionState("disconnected");
-        
-        // Trigger auto-reconnect by incrementing attempts if in a room
-        if (savedRoomDataRef.current && reconnectAttempts < maxReconnectAttempts) {
-          setReconnectAttempts(prev => prev + 1);
-        }
+      onClose: (...rest) => {
+        console.log("Connection closed", rest);
+        setConnectionState(ConnectionState.DISCONNECTED);
       },
       onMessage: handleMessage,
     };
@@ -142,100 +133,18 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (error) {
       console.error("Failed to initialize TelepartyClient:", error);
       // Use setTimeout to avoid setState in effect
-      setTimeout(() => setConnectionState("disconnected"), 0);
+      setTimeout(() => setConnectionState(ConnectionState.DISCONNECTED), 0);
     }
+  }, [handleMessage]);
 
-    return () => {
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-      }
-    };
-  }, [handleMessage, reconnectAttempts]);
 
-  // Auto-reconnect effect - triggers when reconnectAttempts changes
-  useEffect(() => {
-    if (
-      connectionState === "disconnected" &&
-      savedRoomDataRef.current &&
-      reconnectAttempts > 0 &&
-      reconnectAttempts <= maxReconnectAttempts
-    ) {
-      const delay = Math.min(1000 * Math.pow(2, reconnectAttempts - 1), 5000);
-      console.log(`Auto-reconnect attempt ${reconnectAttempts}/${maxReconnectAttempts} in ${delay}ms`);
-
-      reconnectTimeoutRef.current = setTimeout(async () => {
-        console.log("Executing auto-reconnect...");
-        setConnectionState("connecting");
-
-        try {
-          const eventHandler: SocketEventHandler = {
-            onConnectionReady: async () => {
-              console.log("Auto-reconnection successful");
-              setConnectionState("connected");
-              setReconnectAttempts(0);
-
-              // Rejoin the room
-              if (savedRoomDataRef.current && clientRef.current) {
-                const { nickname: savedNick, roomId: savedRoomId, userIcon: savedIcon } = savedRoomDataRef.current;
-                const displayName = savedNick.split("::")[1] || savedNick;
-
-                try {
-                  await new Promise(resolve => setTimeout(resolve, 500));
-                  const userId = currentUserId.current || Date.now().toString();
-                  const uniqueNickname = createUniqueNickname(displayName, userId);
-
-                  const messageList = await clientRef.current.joinChatRoom(
-                    uniqueNickname,
-                    savedRoomId,
-                    savedIcon || undefined
-                  );
-
-                  setRoomId(savedRoomId);
-                  setNickname(uniqueNickname);
-                  setUserIcon(savedIcon);
-
-                  if (messageList && messageList.messages) {
-                    const historyMessages: ChatMessage[] = messageList.messages.map(
-                      (msg: SessionChatMessage, index: number) => ({
-                        ...msg,
-                        id: `${msg.permId}-${msg.timestamp}-${index}`,
-                      })
-                    );
-                    setMessages(historyMessages);
-                  }
-                } catch (err) {
-                  console.error("Failed to rejoin room after reconnect:", err);
-                }
-              }
-            },
-            onClose: () => {
-              console.log("Auto-reconnection closed");
-              setConnectionState("disconnected");
-            },
-            onMessage: handleMessage,
-          };
-
-          clientRef.current = new TelepartyClient(eventHandler);
-        } catch (error) {
-          console.error("Auto-reconnection failed:", error);
-          setConnectionState("disconnected");
-        }
-      }, delay);
-    }
-
-    return () => {
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-      }
-    };
-  }, [reconnectAttempts, connectionState, handleMessage]);
 
   const createRoom = useCallback(
     async (nickname: string, icon?: string): Promise<string> => {
       if (!clientRef.current) {
         throw new Error("Client not initialized");
       }
-      if (connectionState !== "connected") {
+      if (connectionState !== ConnectionState.CONNECTED) {
         throw new Error("Not connected to server");
       }
 
@@ -268,7 +177,7 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
       if (!clientRef.current) {
         throw new Error("Client not initialized");
       }
-      if (connectionState !== "connected") {
+      if (connectionState !== ConnectionState.CONNECTED) {
         throw new Error("Not connected to server");
       }
 
@@ -287,7 +196,7 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
         setRoomId(roomId);
         setNickname(uniqueNickname);
         setUserIcon(icon || null);
-        
+
         // Save room data for reconnection
         savedRoomDataRef.current = {
           nickname: uniqueNickname,
@@ -360,18 +269,75 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
     setUserIcon(null);
     setMessages([]);
     setIsAnyoneTyping(false);
-    setReconnectAttempts(0);
     savedRoomDataRef.current = null;
-    
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-    }
   }, []);
 
-  const reconnect = useCallback(() => {
+  const reconnect = useCallback(async () => {
+    if (!savedRoomDataRef.current || connectionState !== ConnectionState.DISCONNECTED) {
+      return;
+    }
+
     console.log("Manual reconnect triggered");
-    setReconnectAttempts(1);
-  }, []);
+    setConnectionState(ConnectionState.CONNECTING);
+
+    try {
+      const eventHandler: SocketEventHandler = {
+        onConnectionReady: async () => {
+          console.log("Reconnection successful");
+          setConnectionState(ConnectionState.CONNECTED);
+
+          // Rejoin the room
+          if (savedRoomDataRef.current && clientRef.current) {
+            const {
+              nickname: savedNick,
+              roomId: savedRoomId,
+              userIcon: savedIcon,
+            } = savedRoomDataRef.current;
+            const displayName = savedNick.split("::")[1] || savedNick;
+
+            try {
+              await new Promise((resolve) => setTimeout(resolve, 500));
+              const userId = currentUserId.current || Date.now().toString();
+              const uniqueNickname = createUniqueNickname(displayName, userId);
+
+              const messageList = await clientRef.current.joinChatRoom(
+                uniqueNickname,
+                savedRoomId,
+                savedIcon || undefined
+              );
+
+              setRoomId(savedRoomId);
+              setNickname(uniqueNickname);
+              setUserIcon(savedIcon);
+
+              if (messageList && messageList.messages) {
+                const historyMessages: ChatMessage[] = messageList.messages.map(
+                  (msg: SessionChatMessage, index: number) => ({
+                    ...msg,
+                    id: `${msg.permId}-${msg.timestamp}-${index}`,
+                  })
+                );
+                setMessages(historyMessages);
+              }
+            } catch (err) {
+              console.error("Failed to rejoin room after reconnect:", err);
+              setConnectionState(ConnectionState.DISCONNECTED);
+            }
+          }
+        },
+        onClose: () => {
+          console.log("Reconnection closed");
+          setConnectionState(ConnectionState.DISCONNECTED);
+        },
+        onMessage: handleMessage,
+      };
+
+      clientRef.current = new TelepartyClient(eventHandler);
+    } catch (error) {
+      console.error("Reconnection failed:", error);
+      setConnectionState(ConnectionState.DISCONNECTED);
+    }
+  }, [connectionState, handleMessage]);
 
   const value: TelepartyContextType = {
     connectionState,
@@ -380,7 +346,6 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
     userIcon,
     messages,
     isAnyoneTyping,
-    reconnectAttempts,
     createRoom,
     joinRoom,
     sendMessage,

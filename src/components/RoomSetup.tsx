@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { useTelepartyContext } from '../hooks/useTelepartyContext';
+import React, { useState } from "react";
+import { useTelepartyContext } from "../hooks/useTelepartyContext";
 
 const RoomSetup: React.FC = () => {
   const { createRoom, joinRoom, connectionState } = useTelepartyContext();
-  
-  const [nickname, setNickname] = useState('');
-  const [userIcon, setUserIcon] = useState('😊');
-  const [roomIdToJoin, setRoomIdToJoin] = useState('');
+
+  const [nickname, setNickname] = useState("");
+  const [userIcon, setUserIcon] = useState("😊");
+  const [roomIdToJoin, setRoomIdToJoin] = useState("");
   const [createdRoomId, setCreatedRoomId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const isConnected = connectionState === 'connected';
+  const isConnected = connectionState === "connected";
 
   const handleCreateRoom = async () => {
     if (!nickname.trim()) {
-      setError('Please enter a nickname');
+      setError("Please enter a nickname");
       return;
     }
 
@@ -28,7 +28,7 @@ const RoomSetup: React.FC = () => {
       const roomId = await createRoom(nickname.trim(), userIcon);
       setCreatedRoomId(roomId);
     } catch (err) {
-      setError('Failed to create room. Please try again.');
+      setError("Failed to create room. Please try again.");
       console.error(err);
     } finally {
       setIsCreating(false);
@@ -37,12 +37,12 @@ const RoomSetup: React.FC = () => {
 
   const handleJoinRoom = async () => {
     if (!nickname.trim()) {
-      setError('Please enter a nickname');
+      setError("Please enter a nickname");
       return;
     }
 
     if (!roomIdToJoin.trim()) {
-      setError('Please enter a room ID');
+      setError("Please enter a room ID");
       return;
     }
 
@@ -52,7 +52,7 @@ const RoomSetup: React.FC = () => {
     try {
       await joinRoom(nickname.trim(), roomIdToJoin.trim(), userIcon);
     } catch (err) {
-      setError('Failed to join room. Please check the room ID and try again.');
+      setError("Failed to join room. Please check the room ID and try again.");
       console.error(err);
       setIsJoining(false);
     }
@@ -66,7 +66,7 @@ const RoomSetup: React.FC = () => {
     }
   };
 
-  const emojis = ['😊', '😎', '🎉', '🚀', '💡', '🎨', '🎮', '🎵', '⭐', '🔥'];
+  const emojis = ["😊", "😎", "🎉", "🚀", "💡", "🎨", "🎮", "🎵", "⭐", "🔥"];
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -109,8 +109,8 @@ const RoomSetup: React.FC = () => {
                 onClick={() => setUserIcon(emoji)}
                 className={`text-2xl p-2 rounded-md transition-all ${
                   userIcon === emoji
-                    ? 'bg-blue-600 scale-110'
-                    : 'bg-gray-700 hover:bg-gray-600'
+                    ? "bg-blue-600 scale-110"
+                    : "bg-gray-700 hover:bg-gray-600"
                 }`}
                 disabled={!isConnected}
               >
@@ -120,16 +120,15 @@ const RoomSetup: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="max-w-full sm:max-w-xs sm:mx-0 mx-auto">
           {/* Create Room Section */}
-          <div className="border border-gray-600 rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-3 text-blue-400">Create New Room</h3>
+          <div className="py-2">
             <button
               onClick={handleCreateRoom}
               disabled={!isConnected || isCreating || !nickname.trim()}
               className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isCreating ? 'Creating...' : 'Create Room'}
+              {isCreating ? "Creating..." : "Create New Room"}
             </button>
 
             {createdRoomId && (
@@ -143,7 +142,7 @@ const RoomSetup: React.FC = () => {
                     onClick={handleCopyRoomId}
                     className="btn-secondary px-3 py-2 text-sm whitespace-nowrap"
                   >
-                    {copied ? '✓ Copied' : 'Copy'}
+                    {copied ? "✓ Copied" : "Copy"}
                   </button>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">
@@ -152,10 +151,17 @@ const RoomSetup: React.FC = () => {
               </div>
             )}
           </div>
+          <div className="flex justify-center items-center">
+            <div className="border-t border-gray-600 my-4 grow max-w-[25%]"></div>
+            <span className="mx-2 text-gray-400">OR</span>
+            <div className="border-t border-gray-600 my-4 grow max-w-[25%]"></div>
+          </div>
 
           {/* Join Room Section */}
-          <div className="border border-gray-600 rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-3 text-blue-400">Join Existing Room</h3>
+          <div className="py-2">
+            <h3 className="text-lg text-center font-semibold mb-3 text-blue-400">
+              Join Existing Room
+            </h3>
             <input
               type="text"
               value={roomIdToJoin}
@@ -166,16 +172,21 @@ const RoomSetup: React.FC = () => {
             />
             <button
               onClick={handleJoinRoom}
-              disabled={!isConnected || isJoining || !nickname.trim() || !roomIdToJoin.trim()}
+              disabled={
+                !isConnected ||
+                isJoining ||
+                !nickname.trim() ||
+                !roomIdToJoin.trim()
+              }
               className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isJoining ? 'Joining...' : 'Join Room'}
+              {isJoining ? "Joining..." : "Join Room"}
             </button>
           </div>
         </div>
 
         {!isConnected && (
-          <div className="mt-4 text-center text-yellow-500 text-sm">
+          <div className="mt-4 sm:text-left text-center text-yellow-500 text-sm">
             Waiting for connection...
           </div>
         )}
