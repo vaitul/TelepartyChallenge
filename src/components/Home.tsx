@@ -1,10 +1,19 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTelepartyContext } from "../hooks/useTelepartyContext";
-import ChatRoom from "./ChatRoom";
 import ConnectionStatus from "./ConnectionStatus";
 import RoomSetup from "./RoomSetup";
 
 const Home: React.FC = () => {
   const { roomId } = useTelepartyContext();
+  const navigate = useNavigate();
+
+  // Redirect to room page if user has joined a room
+  useEffect(() => {
+    if (roomId) {
+      navigate(`/room/${roomId}`, { replace: true });
+    }
+  }, [roomId, navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 pb-16">
@@ -16,7 +25,7 @@ const Home: React.FC = () => {
           <p className="text-gray-400 text-sm md:text-base">Connect and chat in real-time</p>
         </div>
 
-        {roomId ? <ChatRoom /> : <RoomSetup />}
+        <RoomSetup />
       </div>
       
       <ConnectionStatus />

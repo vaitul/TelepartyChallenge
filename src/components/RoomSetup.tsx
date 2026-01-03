@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTelepartyContext } from "../hooks/useTelepartyContext";
+import { ConnectionState } from "../types/teleparty.types";
 
 const RoomSetup: React.FC = () => {
   const { createRoom, joinRoom, connectionState } = useTelepartyContext();
@@ -13,7 +14,20 @@ const RoomSetup: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const isConnected = connectionState === "connected";
+  const isConnected = connectionState === ConnectionState.CONNECTED;
+
+  // Load saved nickname and icon from localStorage
+  useEffect(() => {
+    const savedNickname = localStorage.getItem('teleparty_nickname');
+    const savedIcon = localStorage.getItem('teleparty_icon');
+    
+    if (savedNickname) {
+      setNickname(savedNickname);
+    }
+    if (savedIcon) {
+      setUserIcon(savedIcon);
+    }
+  }, []);
 
   const handleCreateRoom = async () => {
     if (!nickname.trim()) {
@@ -25,8 +39,13 @@ const RoomSetup: React.FC = () => {
     setIsCreating(true);
 
     try {
+      // Save nickname and icon to localStorage
+      localStorage.setItem('teleparty_nickname', nickname.trim());
+      localStorage.setItem('teleparty_icon', userIcon);
+      
       const roomId = await createRoom(nickname.trim(), userIcon);
       setCreatedRoomId(roomId);
+      // Navigation will be handled by Home component's useEffect
     } catch (err) {
       setError("Failed to create room. Please try again.");
       console.error(err);
@@ -50,7 +69,12 @@ const RoomSetup: React.FC = () => {
     setIsJoining(true);
 
     try {
+      // Save nickname and icon to localStorage
+      localStorage.setItem('teleparty_nickname', nickname.trim());
+      localStorage.setItem('teleparty_icon', userIcon);
+      
       await joinRoom(nickname.trim(), roomIdToJoin.trim(), userIcon);
+      // Navigation will be handled by Home component's useEffect
     } catch (err) {
       setError("Failed to join room. Please check the room ID and try again.");
       console.error(err);

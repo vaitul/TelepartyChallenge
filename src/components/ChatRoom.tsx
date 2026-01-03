@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTelepartyContext } from "../hooks/useTelepartyContext";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
@@ -8,6 +9,7 @@ import { getDisplayName } from "../utils/nickname";
 const ChatRoom: React.FC = () => {
   const { roomId, nickname, leaveRoom } = useTelepartyContext();
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   const handleCopyRoomId = () => {
     if (roomId) {
@@ -17,9 +19,19 @@ const ChatRoom: React.FC = () => {
     }
   };
 
+  const handleShareRoom = () => {
+    if (roomId) {
+      const url = `${window.location.origin}/room/${roomId}`;
+      navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const handleLeaveRoom = () => {
     if (confirm("Are you sure you want to leave this room?")) {
       leaveRoom();
+      navigate('/', { replace: true });
     }
   };
 
@@ -41,7 +53,13 @@ const ChatRoom: React.FC = () => {
                 onClick={handleCopyRoomId}
                 className="text-xs px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-gray-300 transition-all font-medium"
               >
-                {copied ? "✓ Copied" : "📋 Copy"}
+                {copied ? "✓ Copied ID" : "📋 Copy ID"}
+              </button>
+              <button
+                onClick={handleShareRoom}
+                className="text-xs px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-lg text-blue-300 transition-all font-medium"
+              >
+                {copied ? "✓ Copied Link" : "🔗 Share Link"}
               </button>
             </div>
           </div>
