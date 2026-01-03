@@ -16,7 +16,6 @@ const RoomSetup: React.FC = () => {
 
   const isConnected = connectionState === ConnectionState.CONNECTED;
 
-  // Load saved nickname and icon from localStorage
   useEffect(() => {
     const savedNickname = localStorage.getItem('teleparty_nickname');
     const savedIcon = localStorage.getItem('teleparty_icon');
@@ -39,13 +38,11 @@ const RoomSetup: React.FC = () => {
     setIsCreating(true);
 
     try {
-      // Save nickname and icon to localStorage
       localStorage.setItem('teleparty_nickname', nickname.trim());
       localStorage.setItem('teleparty_icon', userIcon);
       
       const roomId = await createRoom(nickname.trim(), userIcon);
       setCreatedRoomId(roomId);
-      // Navigation will be handled by Home component's useEffect
     } catch (err) {
       setError("Failed to create room. Please try again.");
       console.error(err);
@@ -69,12 +66,10 @@ const RoomSetup: React.FC = () => {
     setIsJoining(true);
 
     try {
-      // Save nickname and icon to localStorage
       localStorage.setItem('teleparty_nickname', nickname.trim());
       localStorage.setItem('teleparty_icon', userIcon);
       
       await joinRoom(nickname.trim(), roomIdToJoin.trim(), userIcon);
-      // Navigation will be handled by Home component's useEffect
     } catch (err) {
       setError("Failed to join room. Please check the room ID and try again.");
       console.error(err);
@@ -114,7 +109,6 @@ const RoomSetup: React.FC = () => {
           Join or Create a Chat Room
         </h2>
 
-        {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300 backdrop-blur-sm">
             {error}
@@ -122,7 +116,6 @@ const RoomSetup: React.FC = () => {
         )}
 
         <div className="max-w-md mx-auto">
-          {/* Nickname and Icon Selection */}
           <div className="mb-8">
             <label className="block text-sm font-semibold mb-3 text-gray-200">
               Nickname <span className="text-red-400">*</span>
@@ -160,7 +153,6 @@ const RoomSetup: React.FC = () => {
             </div>
           </div>
 
-          {/* Create Room Section */}
           <div className="py-4">
             <button
               onClick={handleCreateRoom}
@@ -197,7 +189,6 @@ const RoomSetup: React.FC = () => {
             <div className="border-t border-white/10 grow"></div>
           </div>
 
-          {/* Join Room Section */}
           <div className="py-2">
             <h3 className="text-xl text-center font-bold mb-4 text-gray-200">
               Join Existing Room

@@ -7,7 +7,6 @@ const MessageList: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -20,7 +19,6 @@ const MessageList: React.FC = () => {
   };
 
   const isOwnMessage = (messageNickname: string): boolean => {
-    // Compare with current user's nickname (both are unique with userId prefix)
     return nickname === messageNickname;
   };
 
@@ -37,7 +35,6 @@ const MessageList: React.FC = () => {
       ) : (
         messages.map((message) => {
           if (message.isSystemMessage) {
-            // System message
             return (
               <div key={message.userNickname} className="flex justify-center my-4">
                 <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm text-gray-300 text-sm italic max-w-md text-center">
@@ -65,7 +62,6 @@ const MessageList: React.FC = () => {
                     : "bg-white/10 text-gray-100 border border-white/10"
                 }`}
               >
-                {/* User info for other users' messages */}
                 {!isOwn && (
                   <div className="flex items-center gap-2 mb-2">
                     {message.userIcon && (
@@ -77,10 +73,8 @@ const MessageList: React.FC = () => {
                   </div>
                 )}
 
-                {/* Message body */}
                 <div className="break-words leading-relaxed">{message.body}</div>
 
-                {/* Timestamp */}
                 <div
                   className={`text-xs mt-2 ${
                     isOwn ? "text-blue-100" : "text-gray-400"

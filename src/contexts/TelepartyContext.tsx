@@ -26,8 +26,6 @@ export interface TelepartyContextType {
   userIcon: string | null;
   messages: SessionChatMessage[];
   isAnyoneTyping: boolean;
-
-  // Actions
   createRoom: (nickname: string, icon?: string) => Promise<string>;
   joinRoom: (nickname: string, roomId: string, icon?: string) => Promise<void>;
   sendMessage: (body: string) => void;
@@ -59,18 +57,13 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
     userIcon: string | null;
   } | null>(null);
 
-  // Message handler
   const handleMessage = useCallback((message: SocketMessage) => {
     const { data } = message;
-    console.log("Received message:", data, currentUserId.current);
 
-    // Capture userId when it appears in messages
     if (data && "userId" in data && data.userId !== currentUserId.current) {
       currentUserId.current = data.userId as string;
-      console.log("Captured userId:", currentUserId.current);
     }
 
-    // Check if it's a typing presence message
     if (
       data &&
       typeof data === "object" &&
@@ -84,7 +77,6 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    // Check if it's a message list (history) - MessageList type from library
     if (data && typeof data === "object" && "messages" in data) {
       const messageList = data as MessageList;
       const historyMessages: ChatMessage[] = messageList.messages.map(
@@ -97,7 +89,6 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    // Check if it's a chat message
     if (
       data &&
       typeof data === "object" &&
@@ -115,15 +106,12 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
-  // Initialize WebSocket client
   useEffect(() => {
     const eventHandler: SocketEventHandler = {
       onConnectionReady: () => {
-        console.log("Connection ready");
         setConnectionState(ConnectionState.CONNECTED);
       },
       onClose: (...rest) => {
-        console.log("Connection closed", rest);
         setConnectionState(ConnectionState.DISCONNECTED);
       },
       onMessage: handleMessage,
@@ -196,14 +184,12 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
         setNickname(uniqueNickname);
         setUserIcon(icon || null);
 
-        // Save room data for reconnection
         savedRoomDataRef.current = {
           nickname: uniqueNickname,
           roomId,
           userIcon: icon || null,
         };
 
-        // Load message history from the returned MessageList
         if (messageList && messageList.messages) {
           const historyMessages: ChatMessage[] = messageList.messages.map(
             (msg: SessionChatMessage, index: number) => ({
@@ -279,16 +265,13 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    console.log("Manual reconnect triggered");
     setConnectionState(ConnectionState.CONNECTING);
 
     try {
       const eventHandler: SocketEventHandler = {
         onConnectionReady: async () => {
-          console.log("Reconnection successful");
           setConnectionState(ConnectionState.CONNECTED);
 
-          // Rejoin the room
           if (savedRoomDataRef.current && clientRef.current) {
             const {
               nickname: savedNick,
@@ -328,7 +311,6 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         },
         onClose: () => {
-          console.log("Reconnection closed");
           setConnectionState(ConnectionState.DISCONNECTED);
         },
         onMessage: handleMessage,

@@ -37,7 +37,6 @@ const ChatRoom: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto h-[calc(100vh-8rem)]">
-      {/* Room Header */}
       <div className="backdrop-blur-xl bg-white/5 rounded-2xl shadow-xl border border-white/10 mb-6 p-5">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex-1">
@@ -69,17 +68,12 @@ const ChatRoom: React.FC = () => {
         </div>
       </div>
 
-      {/* Chat Container */}
       <div className="backdrop-blur-xl bg-white/5 rounded-2xl shadow-2xl border border-white/10 p-0 flex flex-col h-[calc(100%-10rem)]">
-        {/* Messages Area */}
         <div className="flex-1 overflow-hidden">
           <MessageList />
         </div>
 
-        {/* Typing Indicator */}
         <TypingIndicator />
-
-        {/* Message Input */}
         <MessageInput />
       </div>
     </div>

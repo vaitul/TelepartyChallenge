@@ -9,7 +9,6 @@ const MessageInput: React.FC = () => {
 
   const isDisabled = connectionState !== 'connected' || !roomId;
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (typingTimeoutRef.current) {
@@ -24,18 +23,15 @@ const MessageInput: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
 
-    // Send typing indicator
     if (!isTypingRef.current && e.target.value.length > 0) {
       isTypingRef.current = true;
       setTyping(true);
     }
 
-    // Clear existing timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
 
-    // Set new timeout to stop typing after 3 seconds of inactivity
     if (e.target.value.length > 0) {
       typingTimeoutRef.current = setTimeout(() => {
         if (isTypingRef.current) {
@@ -44,7 +40,6 @@ const MessageInput: React.FC = () => {
         }
       }, 3000);
     } else {
-      // If input is empty, stop typing immediately
       if (isTypingRef.current) {
         isTypingRef.current = false;
         setTyping(false);
@@ -63,13 +58,11 @@ const MessageInput: React.FC = () => {
       sendMessage(message.trim());
       setMessage('');
       
-      // Stop typing indicator
       if (isTypingRef.current) {
         isTypingRef.current = false;
         setTyping(false);
       }
       
-      // Clear timeout
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
@@ -79,7 +72,6 @@ const MessageInput: React.FC = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // Send message on Enter (without Shift)
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
@@ -87,7 +79,6 @@ const MessageInput: React.FC = () => {
   };
 
   const handleBlur = () => {
-    // Stop typing indicator when input loses focus
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }

@@ -13,30 +13,25 @@ const RoomPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // If no roomId in URL, redirect to home
     if (!urlRoomId) {
       navigate('/', { replace: true });
       return;
     }
 
-    // If already in this room, do nothing
     if (roomId === urlRoomId) {
       return;
     }
 
-    // Auto-join room when connected
     const autoJoinRoom = async () => {
       if (connectionState === ConnectionState.CONNECTED && !isJoining && !roomId) {
         setIsJoining(true);
         setError(null);
 
         try {
-          // Get saved nickname from localStorage or use a default
           const savedNickname = localStorage.getItem('teleparty_nickname');
           const savedIcon = localStorage.getItem('teleparty_icon');
           
           if (!savedNickname) {
-            // Redirect to home if no saved nickname
             navigate('/', { replace: true });
             return;
           }
@@ -55,7 +50,6 @@ const RoomPage: React.FC = () => {
     autoJoinRoom();
   }, [urlRoomId, roomId, connectionState, isJoining, joinRoom, navigate]);
 
-  // Show loading state
   if (!roomId || roomId !== urlRoomId) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 pb-16">

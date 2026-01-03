@@ -8,7 +8,6 @@ const Home: React.FC = () => {
   const { roomId } = useTelepartyContext();
   const navigate = useNavigate();
 
-  // Redirect to room page if user has joined a room
   useEffect(() => {
     if (roomId) {
       navigate(`/room/${roomId}`, { replace: true });
