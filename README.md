@@ -1,5 +1,7 @@
 # 🎉 Teleparty Chat Application
 
+🚀 **[Live Demo](https://vaitul.github.io/TelepartyChallenge)**
+
 A modern real-time chat application built with React, TypeScript, and the Teleparty WebSocket library. Features a beautiful glassmorphism UI with persistent room routing and real-time messaging capabilities.
 
 ## ✨ Features
