@@ -21,7 +21,7 @@ const ChatRoom: React.FC = () => {
 
   const handleShareRoom = () => {
     if (roomId) {
-      const url = `${window.location.origin}/room/${roomId}`;
+      const url = window.location.href;
       navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -31,7 +31,7 @@ const ChatRoom: React.FC = () => {
   const handleLeaveRoom = () => {
     if (confirm("Are you sure you want to leave this room?")) {
       leaveRoom();
-      navigate('/', { replace: true });
+      navigate("/", { replace: true });
     }
   };
 
@@ -44,7 +44,9 @@ const ChatRoom: React.FC = () => {
               {getDisplayName(nickname || "")}'s Chat Room
             </h2>
             <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-              <span className="text-xs md:text-sm text-gray-400 font-medium">Room ID:</span>
+              <span className="text-xs md:text-sm text-gray-400 font-medium">
+                Room ID:
+              </span>
               <code className="text-xs md:text-sm font-mono text-green-400 bg-green-500/10 px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-green-500/20">
                 {roomId}
               </code>
@@ -62,7 +64,10 @@ const ChatRoom: React.FC = () => {
               </button>
             </div>
           </div>
-          <button onClick={handleLeaveRoom} className="px-3 py-2 md:px-5 md:py-2.5 text-sm md:text-base rounded-lg md:rounded-xl font-semibold bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+          <button
+            onClick={handleLeaveRoom}
+            className="px-3 py-2 md:px-5 md:py-2.5 text-sm md:text-base rounded-lg md:rounded-xl font-semibold bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+          >
             Leave Room
           </button>
         </div>

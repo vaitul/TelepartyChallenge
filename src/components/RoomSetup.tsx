@@ -153,6 +153,38 @@ const RoomSetup: React.FC = () => {
             </div>
           </div>
 
+          <div className="py-2">
+            <h3 className="text-lg sm:text-xl text-center font-bold mb-3 md:mb-4 text-gray-200">
+              Join Existing Room
+            </h3>
+            <input
+              type="text"
+              value={roomIdToJoin}
+              onChange={(e) => setRoomIdToJoin(e.target.value)}
+              placeholder="Enter Room ID"
+              className="w-full px-3 py-2 md:px-4 md:py-3 text-sm md:text-base rounded-lg md:rounded-xl bg-white/5 border border-white/10 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent backdrop-blur-sm transition-all mb-3 md:mb-4"
+              disabled={!isConnected}
+            />
+            <button
+              onClick={handleJoinRoom}
+              disabled={
+                !isConnected ||
+                isJoining ||
+                !nickname.trim() ||
+                !roomIdToJoin.trim()
+              }
+              className="w-full py-3 md:py-4 text-sm md:text-base rounded-lg md:rounded-xl font-semibold bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              {isJoining ? "Joining..." : "🚪 Join Room"}
+            </button>
+          </div>
+
+          <div className="flex justify-center items-center my-6 md:my-8">
+            <div className="border-t border-white/10 grow"></div>
+            <span className="mx-3 md:mx-4 text-gray-500 font-medium text-xs sm:text-sm">OR</span>
+            <div className="border-t border-white/10 grow"></div>
+          </div>
+
           <div className="py-3 md:py-4">
             <button
               onClick={handleCreateRoom}
@@ -181,38 +213,6 @@ const RoomSetup: React.FC = () => {
                 </p>
               </div>
             )}
-          </div>
-          
-          <div className="flex justify-center items-center my-6 md:my-8">
-            <div className="border-t border-white/10 grow"></div>
-            <span className="mx-3 md:mx-4 text-gray-500 font-medium text-xs sm:text-sm">OR</span>
-            <div className="border-t border-white/10 grow"></div>
-          </div>
-
-          <div className="py-2">
-            <h3 className="text-lg sm:text-xl text-center font-bold mb-3 md:mb-4 text-gray-200">
-              Join Existing Room
-            </h3>
-            <input
-              type="text"
-              value={roomIdToJoin}
-              onChange={(e) => setRoomIdToJoin(e.target.value)}
-              placeholder="Enter Room ID"
-              className="w-full px-3 py-2 md:px-4 md:py-3 text-sm md:text-base rounded-lg md:rounded-xl bg-white/5 border border-white/10 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent backdrop-blur-sm transition-all mb-3 md:mb-4"
-              disabled={!isConnected}
-            />
-            <button
-              onClick={handleJoinRoom}
-              disabled={
-                !isConnected ||
-                isJoining ||
-                !nickname.trim() ||
-                !roomIdToJoin.trim()
-              }
-              className="w-full py-3 md:py-4 text-sm md:text-base rounded-lg md:rounded-xl font-semibold bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-            >
-              {isJoining ? "Joining..." : "🚪 Join Room"}
-            </button>
           </div>
         </div>
 
