@@ -67,10 +67,10 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
       data &&
       typeof data === "object" &&
       "anyoneTyping" in data &&
-      data.usersTyping.filter((x: string) => x !== currentUserId.current)
-        .length > 0
+      (data.anyoneTyping === false ||
+        data.usersTyping.filter((x: string) => x !== currentUserId.current)
+          .length > 0)
     ) {
-      console.log("Typing presence update:", data, currentUserId.current);
       const typingData = data as TypingMessageData;
       setIsAnyoneTyping(typingData.anyoneTyping);
       return;
