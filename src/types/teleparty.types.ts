@@ -4,15 +4,15 @@ export type {
   SocketEventHandler,
   TelepartyClient,
   MessageList,
-} from 'teleparty-websocket-lib';
+} from "teleparty-websocket-lib";
 
-export { SocketMessageTypes } from 'teleparty-websocket-lib';
+export { SocketMessageTypes } from "teleparty-websocket-lib";
 
 // Import for extension
-import type { SessionChatMessage } from 'teleparty-websocket-lib';
+import type { SessionChatMessage } from "teleparty-websocket-lib";
 
 // Custom types for the application
-export type ConnectionState = 'disconnected' | 'connecting' | 'connected';
+export type ConnectionState = "disconnected" | "connecting" | "connected";
 
 export interface ChatMessage extends SessionChatMessage {
   id: string; // Unique ID for React keys
@@ -33,4 +33,3 @@ export interface TypingMessageData {
   anyoneTyping: boolean;
   usersTyping: string[]; // Array of permIds
 }
-

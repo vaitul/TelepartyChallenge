@@ -23,7 +23,7 @@ export interface TelepartyContextType {
   roomId: string | null;
   nickname: string | null;
   userIcon: string | null;
-  messages: ChatMessage[];
+  messages: SessionChatMessage[];
   isAnyoneTyping: boolean;
 
   // Actions
@@ -47,7 +47,7 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
   const [roomId, setRoomId] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string | null>(null);
   const [userIcon, setUserIcon] = useState<string | null>(null);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<SessionChatMessage[]>([]);
   const [isAnyoneTyping, setIsAnyoneTyping] = useState(false);
   const currentUserId = useRef<string | undefined>(undefined);
 

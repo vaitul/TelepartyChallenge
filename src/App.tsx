@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { TelepartyProvider } from './contexts/TelepartyContext';
 import Home from './components/Home';
 
