@@ -9,8 +9,8 @@ const TypingIndicator: React.FC = () => {
   }
 
   return (
-    <div className="px-5 py-3 border-t border-white/10 bg-white/5 backdrop-blur-sm">
-      <div className="flex items-center gap-2 text-sm text-gray-400 font-medium">
+    <div className="px-3 md:px-5 py-2 md:py-3 border-t border-white/10 bg-white/5 backdrop-blur-sm">
+      <div className="flex items-center gap-2 text-xs md:text-sm text-gray-400 font-medium">
         <span>💬 Someone is typing</span>
         <div className="flex gap-1">
           <span className="animate-bounce animation-delay-0 text-blue-400">.</span>

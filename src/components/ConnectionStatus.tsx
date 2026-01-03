@@ -61,13 +61,13 @@ const ConnectionStatus: React.FC = () => {
     <div
       className={`fixed bottom-0 left-0 right-0 border-t z-50 backdrop-blur-xl ${getStatusBarColor()}`}
     >
-      <div className="px-6 py-3 max-w-full">
-        <div className="flex justify-between items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className={`w-2.5 h-2.5 rounded-full ${getStatusColor()} shadow-lg`}></div>
-            <span className="text-sm font-medium text-gray-200">{getStatusText()}</span>
+      <div className="px-3 md:px-6 py-2 md:py-3 max-w-full">
+        <div className="flex justify-between items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full ${getStatusColor()} shadow-lg`}></div>
+            <span className="text-xs md:text-sm font-medium text-gray-200">{getStatusText()}</span>
             {connectionState === ConnectionState.DISCONNECTED && roomId && (
-              <span className="text-xs text-red-200 ml-2 px-2 py-1 bg-red-500/20 rounded-full backdrop-blur-sm">
+              <span className="text-xs text-red-200 ml-1 md:ml-2 px-1.5 py-0.5 md:px-2 md:py-1 bg-red-500/20 rounded-full backdrop-blur-sm">
                 ⚠️ Connection lost
               </span>
             )}
@@ -76,7 +76,7 @@ const ConnectionStatus: React.FC = () => {
           {showReconnectButton && (
             <button
               onClick={handleReconnect}
-              className="px-4 py-2 rounded-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-sm shadow-lg shadow-blue-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
+              className="px-2.5 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-md md:rounded-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg shadow-blue-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
             >
               🔄 Reconnect
             </button>
@@ -85,8 +85,8 @@ const ConnectionStatus: React.FC = () => {
           {showReloadButton && (
             <button
               onClick={handleReload}
-              className="px-4 py-2 rounded-lg font-semibold bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white text-sm shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
-            >
+              className="px-2.5 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-md md:rounded-lg font-semibold bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap">
+            
               ↻ Reload
             </button>
           )}
