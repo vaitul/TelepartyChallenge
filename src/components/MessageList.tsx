@@ -39,11 +39,11 @@ const MessageList: React.FC = () => {
           if (message.isSystemMessage) {
             // System message
             return (
-              <div key={message.userNickname} className="flex justify-center m-0">
-                <div className="chat-message-system max-w-md">
+              <div key={message.userNickname} className="flex justify-center my-4">
+                <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm text-gray-300 text-sm italic max-w-md text-center">
                   {getDisplayName(message.userNickname ?? "System")}{" "}
                   {message.body}
-                  <span className="text-xs text-gray-400 ml-2">
+                  <span className="text-xs text-gray-500 ml-2">
                     {formatTimestamp(message.timestamp)}
                   </span>
                 </div>
@@ -56,30 +56,34 @@ const MessageList: React.FC = () => {
           return (
             <div
               key={message.userNickname}
-              className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
+              className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-4`}
             >
               <div
-                className={isOwn ? "chat-message-user" : "chat-message-other"}
+                className={`max-w-[75%] px-4 py-3 rounded-2xl backdrop-blur-sm ${
+                  isOwn
+                    ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/20"
+                    : "bg-white/10 text-gray-100 border border-white/10"
+                }`}
               >
                 {/* User info for other users' messages */}
                 {!isOwn && (
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-2">
                     {message.userIcon && (
                       <span className="text-lg">{message.userIcon}</span>
                     )}
-                    <span className="text-sm font-semibold">
+                    <span className="text-sm font-bold text-purple-300">
                       {getDisplayName(message.userNickname ?? "Anonymous")}
                     </span>
                   </div>
                 )}
 
                 {/* Message body */}
-                <div className="break-words">{message.body}</div>
+                <div className="break-words leading-relaxed">{message.body}</div>
 
                 {/* Timestamp */}
                 <div
-                  className={`text-xs mt-1 ${
-                    isOwn ? "text-blue-200" : "text-gray-400"
+                  className={`text-xs mt-2 ${
+                    isOwn ? "text-blue-100" : "text-gray-400"
                   }`}
                 >
                   {formatTimestamp(message.timestamp)}

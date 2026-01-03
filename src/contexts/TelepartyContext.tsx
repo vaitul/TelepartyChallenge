@@ -44,8 +44,9 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const clientRef = useRef<TelepartyClient | null>(null);
-  const [connectionState, setConnectionState] =
-    useState<ConnectionStateType>(ConnectionState.CONNECTING);
+  const [connectionState, setConnectionState] = useState<ConnectionStateType>(
+    ConnectionState.CONNECTING
+  );
   const [roomId, setRoomId] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string | null>(null);
   const [userIcon, setUserIcon] = useState<string | null>(null);
@@ -136,8 +137,6 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
       setTimeout(() => setConnectionState(ConnectionState.DISCONNECTED), 0);
     }
   }, [handleMessage]);
-
-
 
   const createRoom = useCallback(
     async (nickname: string, icon?: string): Promise<string> => {
@@ -273,7 +272,10 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const reconnect = useCallback(async () => {
-    if (!savedRoomDataRef.current || connectionState !== ConnectionState.DISCONNECTED) {
+    if (
+      !savedRoomDataRef.current ||
+      connectionState !== ConnectionState.DISCONNECTED
+    ) {
       return;
     }
 

@@ -84,48 +84,48 @@ const RoomSetup: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-lg mx-auto">
-      <div className="card mb-6">
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-400">
+    <div className="max-w-2xl mx-auto">
+      <div className="backdrop-blur-xl bg-white/5 rounded-2xl shadow-2xl border border-white/10 p-8">
+        <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
           Join or Create a Chat Room
         </h2>
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-3 bg-red-900 border border-red-700 rounded-md text-red-100">
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300 backdrop-blur-sm">
             {error}
           </div>
         )}
 
-        <div className="max-w-xs mx-auto">
+        <div className="max-w-md mx-auto">
           {/* Nickname and Icon Selection */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-2 text-gray-300">
-              Nickname <span className="text-red-500">*</span>
+          <div className="mb-8">
+            <label className="block text-sm font-semibold mb-3 text-gray-200">
+              Nickname <span className="text-red-400">*</span>
             </label>
             <input
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder="Enter your nickname"
-              className="input"
+              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent backdrop-blur-sm transition-all"
               disabled={!isConnected}
               maxLength={20}
             />
 
             <div className="my-8">
-              <label className="block text-sm font-medium mb-2 text-gray-300">
+              <label className="block text-sm font-semibold mb-3 text-gray-200">
                 Choose your icon (optional)
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-7 gap-2">
                 {emojis.map((emoji) => (
                   <button
                     key={emoji}
                     onClick={() => setUserIcon(emoji)}
-                    className={`text-2xl p-1 rounded-md transition-all ${
+                    className={`text-2xl p-3 rounded-xl transition-all ${
                       userIcon === emoji
-                        ? "bg-blue-600 scale-110"
-                        : "bg-gray-700 hover:bg-gray-600"
+                        ? "bg-gradient-to-br from-blue-500 to-purple-600 scale-110 shadow-lg shadow-blue-500/50"
+                        : "bg-white/5 hover:bg-white/10 border border-white/10"
                     }`}
                     disabled={!isConnected}
                   >
@@ -137,44 +137,45 @@ const RoomSetup: React.FC = () => {
           </div>
 
           {/* Create Room Section */}
-          <div className="py-2">
+          <div className="py-4">
             <button
               onClick={handleCreateRoom}
               disabled={!isConnected || isCreating || !nickname.trim()}
-              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-[1.02] active:scale-[0.98]"
             >
-              {isCreating ? "Creating..." : "Create New Room"}
+              {isCreating ? "Creating..." : "🎉 Create New Room"}
             </button>
 
             {createdRoomId && (
-              <div className="mt-4 p-3 bg-gray-700 rounded-md">
-                <p className="text-sm text-gray-300 mb-2">Room ID:</p>
+              <div className="mt-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl backdrop-blur-sm">
+                <p className="text-sm font-semibold text-green-300 mb-3">🎊 Room Created Successfully!</p>
                 <div className="flex items-center gap-2">
-                  <code className="flex-1 p-2 bg-gray-800 rounded text-green-400 text-sm font-mono break-all">
+                  <code className="flex-1 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-sm font-mono break-all">
                     {createdRoomId}
                   </code>
                   <button
                     onClick={handleCopyRoomId}
-                    className="btn-secondary px-3 py-2 text-sm whitespace-nowrap"
+                    className="px-4 py-2.5 rounded-lg font-medium bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition-all whitespace-nowrap"
                   >
-                    {copied ? "✓ Copied" : "Copy"}
+                    {copied ? "✓ Copied" : "📋 Copy"}
                   </button>
                 </div>
-                <p className="text-xs text-gray-400 mt-2">
-                  Share this ID with others to invite them to your room
+                <p className="text-xs text-gray-400 mt-3">
+                  📤 Share this ID with others to invite them to your room
                 </p>
               </div>
             )}
           </div>
-          <div className="flex justify-center items-center">
-            <div className="border-t border-gray-600 my-4 grow max-w-[25%]"></div>
-            <span className="mx-2 text-gray-400">OR</span>
-            <div className="border-t border-gray-600 my-4 grow max-w-[25%]"></div>
+          
+          <div className="flex justify-center items-center my-8">
+            <div className="border-t border-white/10 grow"></div>
+            <span className="mx-4 text-gray-500 font-medium text-sm">OR</span>
+            <div className="border-t border-white/10 grow"></div>
           </div>
 
           {/* Join Room Section */}
           <div className="py-2">
-            <h3 className="text-lg text-center font-semibold mb-3 text-blue-400">
+            <h3 className="text-xl text-center font-bold mb-4 text-gray-200">
               Join Existing Room
             </h3>
             <input
@@ -182,7 +183,7 @@ const RoomSetup: React.FC = () => {
               value={roomIdToJoin}
               onChange={(e) => setRoomIdToJoin(e.target.value)}
               placeholder="Enter Room ID"
-              className="input mb-3"
+              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent backdrop-blur-sm transition-all mb-4"
               disabled={!isConnected}
             />
             <button
@@ -193,16 +194,19 @@ const RoomSetup: React.FC = () => {
                 !nickname.trim() ||
                 !roomIdToJoin.trim()
               }
-              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 rounded-xl font-semibold bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-[1.02] active:scale-[0.98]"
             >
-              {isJoining ? "Joining..." : "Join Room"}
+              {isJoining ? "Joining..." : "🚪 Join Room"}
             </button>
           </div>
         </div>
 
         {!isConnected && (
-          <div className="mt-4 text-center text-yellow-500 text-sm">
-            Waiting for connection...
+          <div className="mt-6 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 rounded-full text-yellow-400 text-sm font-medium backdrop-blur-sm">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+              Connecting to server...
+            </div>
           </div>
         )}
       </div>

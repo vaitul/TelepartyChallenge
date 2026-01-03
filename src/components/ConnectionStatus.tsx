@@ -47,27 +47,27 @@ const ConnectionStatus: React.FC = () => {
   const getStatusBarColor = () => {
     switch (connectionState) {
       case ConnectionState.CONNECTED:
-        return "bg-green-900 border-green-700";
+        return "bg-gradient-to-r from-green-900/90 to-emerald-900/90 border-green-700/50";
       case ConnectionState.CONNECTING:
-        return "bg-yellow-900 border-yellow-700";
+        return "bg-gradient-to-r from-yellow-900/90 to-amber-900/90 border-yellow-700/50";
       case ConnectionState.DISCONNECTED:
-        return "bg-red-900 border-red-700";
+        return "bg-gradient-to-r from-red-900/90 to-rose-900/90 border-red-700/50";
       default:
-        return "bg-gray-800 border-gray-700";
+        return "bg-gray-800/90 border-gray-700/50";
     }
   };
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 border-t z-50 ${getStatusBarColor()}`}
+      className={`fixed bottom-0 left-0 right-0 border-t z-50 backdrop-blur-xl ${getStatusBarColor()}`}
     >
-      <div className="px-4 py-2 max-w-full">
+      <div className="px-6 py-3 max-w-full">
         <div className="flex justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${getStatusColor()}`}></div>
-            <span className="text-sm text-gray-300">{getStatusText()}</span>
+          <div className="flex items-center gap-3">
+            <div className={`w-2.5 h-2.5 rounded-full ${getStatusColor()} shadow-lg`}></div>
+            <span className="text-sm font-medium text-gray-200">{getStatusText()}</span>
             {connectionState === ConnectionState.DISCONNECTED && roomId && (
-              <span className="text-xs text-red-200 ml-2">
+              <span className="text-xs text-red-200 ml-2 px-2 py-1 bg-red-500/20 rounded-full backdrop-blur-sm">
                 ⚠️ Connection lost
               </span>
             )}
@@ -76,18 +76,18 @@ const ConnectionStatus: React.FC = () => {
           {showReconnectButton && (
             <button
               onClick={handleReconnect}
-              className="btn-primary text-xs py-1 px-3 whitespace-nowrap"
+              className="px-4 py-2 rounded-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-sm shadow-lg shadow-blue-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
             >
-              Reconnect
+              🔄 Reconnect
             </button>
           )}
 
           {showReloadButton && (
             <button
               onClick={handleReload}
-              className="btn-danger text-xs py-1 px-3 whitespace-nowrap"
+              className="px-4 py-2 rounded-lg font-semibold bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white text-sm shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
             >
-              Reload
+              ↻ Reload
             </button>
           )}
         </div>
