@@ -111,7 +111,7 @@ export const TelepartyProvider: React.FC<{ children: React.ReactNode }> = ({
       onConnectionReady: () => {
         setConnectionState(ConnectionState.CONNECTED);
       },
-      onClose: (...rest) => {
+      onClose: () => {
         setConnectionState(ConnectionState.DISCONNECTED);
       },
       onMessage: handleMessage,
