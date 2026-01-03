@@ -66,13 +66,28 @@ const RoomSetup: React.FC = () => {
     }
   };
 
-  const emojis = ["😊", "😎", "🎉", "🚀", "💡", "🎨", "🎮", "🎵", "⭐", "🔥"];
+  const emojis = [
+    "😊",
+    "🤠",
+    "🤬",
+    "😎",
+    "🎉",
+    "🚀",
+    "💡",
+    "🎮",
+    "🎵",
+    "⭐",
+    "🔥",
+    "👨🏻‍💻",
+    "🙍🏻‍♀️",
+    "🙎🏼‍♂️",
+  ];
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-lg mx-auto">
       <div className="card mb-6">
         <h2 className="text-2xl font-bold mb-6 text-center text-blue-400">
-          Welcome to Teleparty Chat
+          Join or Create a Chat Room
         </h2>
 
         {/* Error Message */}
@@ -82,45 +97,45 @@ const RoomSetup: React.FC = () => {
           </div>
         )}
 
-        {/* Nickname and Icon Selection */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-2 text-gray-300">
-            Nickname <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            placeholder="Enter your nickname"
-            className="input"
-            disabled={!isConnected}
-            maxLength={20}
-          />
-        </div>
+        <div className="max-w-xs mx-auto">
+          {/* Nickname and Icon Selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-2 text-gray-300">
+              Nickname <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="Enter your nickname"
+              className="input"
+              disabled={!isConnected}
+              maxLength={20}
+            />
 
-        <div className="mb-8">
-          <label className="block text-sm font-medium mb-2 text-gray-300">
-            Choose your icon (optional)
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {emojis.map((emoji) => (
-              <button
-                key={emoji}
-                onClick={() => setUserIcon(emoji)}
-                className={`text-2xl p-2 rounded-md transition-all ${
-                  userIcon === emoji
-                    ? "bg-blue-600 scale-110"
-                    : "bg-gray-700 hover:bg-gray-600"
-                }`}
-                disabled={!isConnected}
-              >
-                {emoji}
-              </button>
-            ))}
+            <div className="my-8">
+              <label className="block text-sm font-medium mb-2 text-gray-300">
+                Choose your icon (optional)
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {emojis.map((emoji) => (
+                  <button
+                    key={emoji}
+                    onClick={() => setUserIcon(emoji)}
+                    className={`text-2xl p-1 rounded-md transition-all ${
+                      userIcon === emoji
+                        ? "bg-blue-600 scale-110"
+                        : "bg-gray-700 hover:bg-gray-600"
+                    }`}
+                    disabled={!isConnected}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="max-w-full sm:max-w-xs sm:mx-0 mx-auto">
           {/* Create Room Section */}
           <div className="py-2">
             <button
@@ -186,7 +201,7 @@ const RoomSetup: React.FC = () => {
         </div>
 
         {!isConnected && (
-          <div className="mt-4 sm:text-left text-center text-yellow-500 text-sm">
+          <div className="mt-4 text-center text-yellow-500 text-sm">
             Waiting for connection...
           </div>
         )}
