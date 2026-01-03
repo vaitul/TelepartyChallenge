@@ -1,8 +1,11 @@
 import React from "react";
 import { useTelepartyContext } from "../hooks/useTelepartyContext";
 
+const MAX_RECONNECT_ATTEMPTS = 3;
+
 const ConnectionStatus: React.FC = () => {
-  const { connectionState } = useTelepartyContext();
+  const { connectionState, roomId, reconnectAttempts, reconnect } =
+    useTelepartyContext();
 
   const getStatusColor = () => {
     switch (connectionState) {
@@ -22,7 +25,9 @@ const ConnectionStatus: React.FC = () => {
       case "connected":
         return "Connected";
       case "connecting":
-        return "Connecting...";
+        return reconnectAttempts > 0
+          ? `Reconnecting (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`
+          : "Connecting...";
       case "disconnected":
         return "Disconnected";
       default:
@@ -33,6 +38,18 @@ const ConnectionStatus: React.FC = () => {
   const handleReload = () => {
     window.location.reload();
   };
+
+  const handleReconnect = () => {
+    reconnect();
+  };
+
+  const showReconnectButton =
+    connectionState === "disconnected" &&
+    roomId &&
+    reconnectAttempts < MAX_RECONNECT_ATTEMPTS;
+  const showReloadButton =
+    connectionState === "disconnected" &&
+    (!roomId || reconnectAttempts >= MAX_RECONNECT_ATTEMPTS);
 
   return (
     <div
@@ -47,14 +64,26 @@ const ConnectionStatus: React.FC = () => {
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${getStatusColor()}`}></div>
             <span className="text-sm text-gray-300">{getStatusText()}</span>
-            {connectionState === "disconnected" && (
+            {connectionState === "disconnected" && roomId && (
               <span className="text-xs text-red-200 ml-2">
-                ⚠️ Connection lost - Please reload to reconnect
+                ⚠️{" "}
+                {reconnectAttempts >= MAX_RECONNECT_ATTEMPTS
+                  ? "Connection lost - All retry attempts failed"
+                  : "Connection lost - Attempting to reconnect"}
               </span>
             )}
           </div>
 
-          {connectionState === "disconnected" && (
+          {showReconnectButton && (
+            <button
+              onClick={handleReconnect}
+              className="btn-primary text-xs py-1 px-3 whitespace-nowrap"
+            >
+              Reconnect
+            </button>
+          )}
+
+          {showReloadButton && (
             <button
               onClick={handleReload}
               className="btn-danger text-xs py-1 px-3 whitespace-nowrap"

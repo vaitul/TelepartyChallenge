@@ -88,7 +88,7 @@
   }
   
   .chat-message-system {
-    @apply p-3 rounded-lg mb-2 break-words bg-gray-600 text-gray-300 text-center text-sm italic mx-auto;
+    @apply p-3 rounded-lg break-words text-gray-300 text-center text-sm italic mx-auto;
   }
   
   @media (prefers-color-scheme: light) {

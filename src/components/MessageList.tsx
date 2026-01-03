@@ -39,8 +39,9 @@ const MessageList: React.FC = () => {
           if (message.isSystemMessage) {
             // System message
             return (
-              <div key={message.userNickname} className="flex justify-center">
+              <div key={message.userNickname} className="flex justify-center m-0">
                 <div className="chat-message-system max-w-md">
+                  {getDisplayName(message.userNickname ?? "System")}{" "}
                   {message.body}
                   <span className="text-xs text-gray-400 ml-2">
                     {formatTimestamp(message.timestamp)}
